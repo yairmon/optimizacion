@@ -36,7 +36,7 @@ public class Controlador {
                 matriz.put(nombre, new Point(x, y));
             }
             System.out.println("Se han cargado todos los datos");
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | NumberFormatException e) {
             System.out.println("El archivo no tiene el formato adecuado");
             System.out.println("Error: " + e.getMessage());
         }
