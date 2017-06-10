@@ -135,6 +135,7 @@ public class Main extends javax.swing.JFrame {
             File file = fc.getSelectedFile();
             String ruta = file.getPath();
             jTextFieldRuta.setText(ruta);
+            jTextAreaEntrada.setText("");
             
             try {
                 FileReader fr = new FileReader(file);
