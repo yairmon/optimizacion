@@ -5,13 +5,12 @@
  */
 package vista;
 
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,7 +18,6 @@ import optimizacion.Controlador;
 
 /**
  *
- * @author yair
  */
 public class Main extends javax.swing.JFrame {
 
@@ -29,6 +27,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         super("Complejidad");
         initComponents();
+        jLabelEstado.setText("");
     }
 
     /**
@@ -45,10 +44,10 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaEntrada = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaSalida = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
         jTextFieldRuta = new javax.swing.JTextField();
+        jTextFieldSalida = new javax.swing.JTextField();
+        jLabelEstado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,17 +60,11 @@ public class Main extends javax.swing.JFrame {
 
         jLabel2.setText("Contenido del archivo");
 
-        jTextAreaEntrada.setEditable(false);
         jTextAreaEntrada.setColumns(20);
         jTextAreaEntrada.setRows(5);
         jScrollPane1.setViewportView(jTextAreaEntrada);
 
         jLabel3.setText("Salida");
-
-        jTextAreaSalida.setEditable(false);
-        jTextAreaSalida.setColumns(20);
-        jTextAreaSalida.setRows(5);
-        jScrollPane2.setViewportView(jTextAreaSalida);
 
         jButton2.setText("Ejecutar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +76,11 @@ public class Main extends javax.swing.JFrame {
         jTextFieldRuta.setEditable(false);
         jTextFieldRuta.setText("...");
 
+        jTextFieldSalida.setEditable(false);
+
+        jLabelEstado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelEstado.setText("estado");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,17 +88,18 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldSalida)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextFieldRuta))
-                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2))
+                    .addComponent(jLabelEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,13 +112,15 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                .addComponent(jTextFieldSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelEstado)
                 .addContainerGap())
         );
 
@@ -152,16 +153,27 @@ public class Main extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "No se puede leer el archivo");
             }
             
-            
+            jLabelEstado.setText("");
+            jTextFieldSalida.setText("");
         } 
         else { /* NO-OP */ }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO 
-        Controlador c = new Controlador(jTextAreaEntrada.getText());
+        jLabelEstado.setText("");
+        try {
+            Controlador c = new Controlador(jTextAreaEntrada.getText());
+            String texto = c.obtenerUbicacion();
+            jTextFieldSalida.setText(texto);
+        } catch (FileNotFoundException e) {
+            jLabelEstado.setText("<html><font color='red'>"+e.getMessage()+"</font></html>");
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Exception e) {
+            jLabelEstado.setText("<html><font color='red'>Error desconocido: " + e.getMessage()+"</font></html>");
+            System.out.println("Error desconocido: " + e.getMessage() + ".... " + e.toString());
+            JOptionPane.showMessageDialog(this, "Error desconocido");
+        }
         
-        JOptionPane.showMessageDialog(this, "No implementado...");
         
         
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -209,10 +221,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelEstado;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaEntrada;
-    private javax.swing.JTextArea jTextAreaSalida;
     private javax.swing.JTextField jTextFieldRuta;
+    private javax.swing.JTextField jTextFieldSalida;
     // End of variables declaration//GEN-END:variables
 }

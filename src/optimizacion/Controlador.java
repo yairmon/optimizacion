@@ -6,24 +6,32 @@
 package optimizacion;
 
 import java.awt.Point;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 /**
- *  Convierte los datos de entrada en una matriz
+ *  Convierte los datos de entrada en una matriz 
+ *      {nombre_ciudad, (x,y)}
  */
 public class Controlador {
     
     private int tamMatriz;
     private final HashMap<String, Point> matriz;
 
-    public Controlador(String entrada) {
+    public Controlador(String entrada) throws FileNotFoundException {
         matriz = new HashMap();
         cargarEntrada(entrada);
     }
     
-    private void cargarEntrada(String entrada){
+    /**
+     * Se encarga de asignar los valores del archivo en una matriz
+     *      {nombre_ciudad, (x,y)}
+     * @param entrada El archivo de texto en forma de String
+     * @throws FileNotFoundException Cuando el archivo no contiene el formato correcto
+     */
+    private void cargarEntrada(String entrada) throws FileNotFoundException {
         StringTokenizer st = new StringTokenizer(entrada,"\n");
         try {
             tamMatriz = Integer.parseInt(st.nextToken());
@@ -33,12 +41,17 @@ public class Controlador {
                 String nombre = st2.nextToken();
                 int x = Integer.parseInt(st2.nextToken());
                 int y = Integer.parseInt(st2.nextToken());
-                matriz.put(nombre, new Point(x, y));
+                if(x < tamMatriz && y < tamMatriz)
+                    matriz.put(nombre, new Point(x, y));
+                else throw new IllegalAccessError("Existen ciudades por fuera del rango...\nRango actual: " + tamMatriz);
             }
-            System.out.println("Se han cargado todos los datos");
+//            System.out.println("Se han cargado todos los datos");
         } catch (NoSuchElementException | NumberFormatException e) {
             System.out.println("El archivo no tiene el formato adecuado");
             System.out.println("Error: " + e.getMessage());
+            throw new FileNotFoundException("El archivo no tiene el formato adecuado");
+        } catch (IllegalAccessError e) {
+            throw new FileNotFoundException(e.getMessage());
         }
     }
 
@@ -48,6 +61,21 @@ public class Controlador {
 
     public void setTamMatriz(int tamMatriz) {
         this.tamMatriz = tamMatriz;
+    }
+    
+    /**
+     * Obtiene la ubicacion del colegio
+     * @return Devuelve "El colegio debe ser ubicado en (x,y)"
+     */
+    public String obtenerUbicacion(){
+        try {
+            Optimizacion o = new Optimizacion(matriz);
+            Point p = o.obtenerUbicacion();
+            return "El colegio debe ser ubicado en ("+ p.x + ", " + p.y + ")";
+        } catch (Exception e) {
+            System.out.println("Error desconocido: " + e.getMessage() + ".... " + e.toString());
+            return "No se puede calcular...";
+        }
     }
     
     
