@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import vista.Dibujar;
 
 /**
  *  Convierte los datos de entrada en una matriz 
@@ -71,6 +72,7 @@ public class Controlador {
         try {
             Optimizacion o = new Optimizacion(matriz);
             Point p = o.obtenerUbicacion();
+            Dibujar.dibuja(matriz, tamMatriz, p);
             return "El colegio debe ser ubicado en ("+ p.x + ", " + p.y + ")";
         } catch (Exception e) {
             System.out.println("Error desconocido: " + e.getMessage() + ".... " + e.toString());
