@@ -5,6 +5,7 @@
  */
 package optimizacion;
 
+import vista.Dibujar;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -71,6 +72,7 @@ public class Controlador {
         try {
             Optimizacion o = new Optimizacion(matriz);
             Point p = o.obtenerUbicacion();
+            Dibujar.dibuja(matriz, tamMatriz, p);
             return "El colegio debe ser ubicado en ("+ p.x + ", " + p.y + ")";
         } catch (Exception e) {
             System.out.println("Error desconocido: " + e.getMessage() + ".... " + e.toString());
