@@ -9,8 +9,7 @@ import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
 
 /**
- *
- * @author yair
+ * Probar si LP_SOLVE funciona
  */
 public class Demo {
     public static void main(String[] args) {
