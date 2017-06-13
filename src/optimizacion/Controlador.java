@@ -70,7 +70,7 @@ public class Controlador {
      */
     public String obtenerUbicacion(){
         try {
-            Optimizacion o = new Optimizacion(matriz);
+            Optimizacion o = new Optimizacion(matriz, tamMatriz);
             Point p = o.obtenerUbicacion();
             Dibujar.dibuja(matriz, tamMatriz, p);
             return "El colegio debe ser ubicado en ("+ p.x + ", " + p.y + ")";
